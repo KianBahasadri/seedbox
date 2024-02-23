@@ -22,7 +22,7 @@ Think of it this way, with the money you save on windows licences by downloading
 ## Steps (Overview)
 1. VPS Considerations
 2. Setup VPN and Firewall
-3. Setup torrenting software
+3. Setup torrenting software and SSL certificate
 4. mount cloud storage
 
 
@@ -43,21 +43,8 @@ Non-security factors:
 (when dealing with any linux firewall, its honestly easier to switch to the root user. Thus, its nice to do this first in case you bork the system and want to start over)
 in my OPINION, the easiest firewall to use on linux is ufw. Your distribution may or may not already have it running.
 For managing ufw you can either use ufw itself or systemctl, I suggest use ufw, I feel like its better, idk, gut feeling.
-To see if its running, you can do either 
-```systemctl status ufw```
-or
-```ufw status```
-
-and if stopped, use
-```ufw enable```
-or
-```systemctl startufw```
-to enable it.
-
-to see the current ufw status run:
-```ufw status verbose```
-You can run that command again afterwards to see the differences.
-
+To see if ufw is running, use: `ufw status verbose` and if stopped, use `ufw enable` to enable it.
+You can aso use the status command to see observe the changes we make to the ufw rules.
 Now run the following commands:
 ```
 ufw allow ssh
@@ -65,4 +52,23 @@ ufw default deny outgoing
 ufw default deny incoming
 ```
 This blocks every connection on the server except for port 22.  
-If you haven't installed your vpn software yet, use
+If you haven't downloaded your vpn software yet, use `ufw disable`.
+
+At this point, you should set up your vpn, I personally set up wireguard, as OpenVPN is for boomers. (You can use whatever you want it really doesnt matter)
+I used the [Windscribe Config Generator](https://windscribe.com/getconfig/wireguard) to generate a config file.
+Now you have two options, you can either whitelist the vpn interface or the vpn ip address endpoint. I went with the interface because idk. (the default wireguard interface is wg0)
+```
+ufw allow in on wg0
+ufw allow out on wg0
+```
+Also of course start up your vpn and make sure its enabled to start on boot. if that doesnt happen by default you can use `systemctl enable <vpn_service_name>`.
+If you arent sure if its enabled use `systemctl status <vpn_service_name>`.
+
+Now you can start ufw using`ufw enable` and your system should be working properly. do `ping google.com` and if you get packets back then your probably good to go.
+Note: now is a good time to run `ufw status verbose` and understand what we did to it.
+
+
+## Setup torrenting software and SSL
+I personally used qbittorrent. I haven't researched the other software so frankly I dont know if this is a good choice given the market for torrenting software.
+That said, it does the job for me and I don't have any complaints.
+Setting up the software is pretty simple, install qbittorrent-nox and then run it using 
