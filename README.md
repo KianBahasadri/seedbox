@@ -44,6 +44,7 @@ Non-security factors:
 (when dealing with any linux firewall, its honestly easier to switch to the root user. Thus, its nice to do this first in case you bork the system as root and want to start over)
 in my OPINION, the easiest firewall to use on linux is ufw. Your distribution may or may not already have it running.
 **NOTE: ENSURE FIREWALLD IS NOT RUNNING, IT WILL FUCK EVERYTHING UP**
+**NOTE: ALSO DONT START UFW BEFORE ALLOWING SSH CONNECTIONS**
 For managing ufw you can either use ufw itself or systemctl, I suggest use ufw, I feel like its better, idk, gut feeling.
 To see if ufw is running, use: `ufw status verbose` and if stopped, use `ufw enable` to enable it.
 You can aso use the status command to see observe the changes we make to the ufw rules.
@@ -63,6 +64,8 @@ Now you have two options, you can either whitelist the vpn interface or the vpn 
 ufw allow in on wg0
 ufw allow out on wg0
 ```
+**NOTE: START UP UFW BEFORE STARTING VPN, IT MAY BLOCK YOUR SSH CONNECTION**
+
 Also of course start up your vpn and make sure its enabled to start on boot. if that doesnt happen by default you can use `systemctl enable <vpn_service_name>`.
 If you arent sure if its enabled use `systemctl status <vpn_service_name>`.
 
@@ -73,4 +76,26 @@ Note: now is a good time to run `ufw status verbose` and understand what we did 
 ## Setup torrenting software and SSL
 I personally used qbittorrent. I haven't researched the other software so frankly I dont know if this is a good choice given the market for torrenting software.
 That said, it does the job for me and I don't have any complaints.
-Setting up the software is pretty simple, install qbittorrent-nox and then run it using 
+Setting up the software is pretty simple, install qbittorrent-nox and then run it using
+```qbittorent-nox```
+(pretty straightforward there)
+
+then you need to generate SSL certificates and set an admin password. I HIGHLY RECCOMEND that you do things in that order, because if you set an admin password before generating SSL certificates, you just exposed your admin password to the public :(  
+To set up ssl certificates honestly just follow the guide here:
+https://github.com/qbittorrent/qBittorrent/wiki/Linux-WebUI-setting-up-HTTPS-with-self-signed-SSL-certificates
+
+If you're wondering whether to use self-signed certificates or certbot or something, just self-sign it man, its not a security risk if your browser caches the certificate and warns you if it changes. (I know firefox does).
+
+Then set an admin password, you can find out where to do it in the application settings pretty easily.
+
+
+## Mount Cloud Storage
+Lastly you need to mount your cloud storage, you can use something like s3fs or rclone mount, I'm going to use rclone mount.
+Now, something I honestly don't know shit about is what to do about VFS caching: https://rclone.org/commands/rclone_mount/#vfs-file-caching
+I'm going to use FULL caching just because I'm not limited for diskspace, and it *seems* like the fastest choice. guess we'll see huh.
+
+
+## Try torrenting some ISO files!
+All-righty then, you should be good to go, here is the magnet link for EndeavourOS to get you started :D
+magnet:?xt=urn:btih:4080177220dac4363d76922c3809a77e8bbe1e30&dn=EndeavourOS_Galileo-Neo-2024.01.25.iso&tr=udp%3A%2F%2Ftracker.openbittorrent.com%3A80&tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce&tr=udp%3A%2F%2Fthetracker.org%3A80%2Fannounce&tr=udp%3A%2F%2Ftracker.dutchtracking.com%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce
+
