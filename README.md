@@ -1,7 +1,8 @@
 # seedbox
 simple documentation on creating seedbox with vps &amp; object cloud storage.  
 I personally only use this infrastructure to seed ISO files for various linux distributions.  
-My total cost comes out to around $10-$15 a month for around 1TB storage but it will scale with more storage.
+The total cost comes out to around $10-$15 a month for around 1TB storage but it will scale with more storage.
+I'm personally paying about $5 a month because I'm getting the vpn and storage for free!
 
 ## Ingredients
 - access to a vps 
@@ -11,11 +12,11 @@ My total cost comes out to around $10-$15 a month for around 1TB storage but it 
   - my provider is windscribe and my client is wireguard
   - there are a lot of free vpn providers but I'm paying $2 a month, thats basically free
 - access to some kind of cloud storage
-  - I'm using backblaze which is an object cloud storage (like aws s3), it is cheap and basically has free egress :D
+  - I was going to use backblaze which is an object cloud storage (like aws s3), it is cheap and basically has free egress :D
   - I believe this is one thing you cant (easily) get for free. However, usually institutions like schools, universities, or your work, may provide you with free personal storage.
-  - For example my school gives me 4 terabytes of free microsoft cloud storage :D (make sure you encrypt it if its not your own account, ill go over this later)
+  - For example my school gives me 5 terabytes of free microsoft cloud storage :D (make sure you encrypt it if its not your own account, ill go over this later)
 
-Basically what I'm saying is that you can definitely set up your shit a lot cheaper than my shit, but like cmon its $15 who cares.  
+Basically what I'm saying is that you can definitely set up your shit a lot cheaper than the base rate, but like cmon its $15 who cares.  
 Think of it this way, with the money you save on windows licences by downloading various linux distributions (see above section) you can pay for the cloud services :3
 
 
@@ -40,8 +41,9 @@ Non-security factors:
   - mine gets around like 500 up and 400 down. More than enough to get the ball rolling
 
 ## Setup VPN and Firewall
-(when dealing with any linux firewall, its honestly easier to switch to the root user. Thus, its nice to do this first in case you bork the system and want to start over)
+(when dealing with any linux firewall, its honestly easier to switch to the root user. Thus, its nice to do this first in case you bork the system as root and want to start over)
 in my OPINION, the easiest firewall to use on linux is ufw. Your distribution may or may not already have it running.
+**NOTE: ENSURE FIREWALLD IS NOT RUNNING, IT WILL FUCK EVERYTHING UP**
 For managing ufw you can either use ufw itself or systemctl, I suggest use ufw, I feel like its better, idk, gut feeling.
 To see if ufw is running, use: `ufw status verbose` and if stopped, use `ufw enable` to enable it.
 You can aso use the status command to see observe the changes we make to the ufw rules.
