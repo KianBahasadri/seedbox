@@ -8,7 +8,6 @@ I'm personally paying about $2 a month because I'm only paying for the vpn; I'm 
 - Ubuntu 22.04 LTS x86\_64
 - Torrenting:
   - QBittorent
-  - Wireguard
   - Radarr
 - Streaming:
   - Kodi -- (This is a client side application)
@@ -18,27 +17,32 @@ I'm personally paying about $2 a month because I'm only paying for the vpn; I'm 
   - CloudFlare
     - Domain Name Registrar
     - SSL Certificate
-#### External Services
-- access to a vps 
-  - I'm using a Microsoft Azure B1s instnace, but really any non shit-tier server will work, just get something moderately cheap with fast internet speed
+  - Wireguard
+#### External Services:
+- Virtual Private Server
+  - I'm using a Microsoft Azure B1s instance
+  - any non shit-tier server will work, just get something moderately cheap (~$10/month)
   - If you use Oracle or AWS you can get a free vps for like a year or something, I'm getting free Azure credits from Github Education Pack
-- access to a vpn
-  - my provider is windscribe and my client is wireguard
+  - Digital Ocean, Linode, and many other providers provide a couple free months.
+- Virtual Private Network
+  - I am using Windscribe
   - there are a lot of free vpn providers but I'm paying $2 a month, thats basically free
-- access to some kind of cloud storage
+- Cloud Storage
   - I was going to use backblaze which is an object cloud storage (like aws s3), it is cheap and basically has free egress :D
   - I believe this will typically end up being the most expensive part. However, usually institutions like schools, universities, or your work, may provide you with free personal storage.
-  - My school gives me 5 terabytes of free microsoft cloud storage :D (make sure you encrypt it if someone else is providing it to you, ill go over this later)
+  - My school gives me 5 terabytes of free microsoft cloud storage :D
+  - Make sure you encrypt it if someone else is providing it to you, ill go over this later
 
 
 ## Steps To Follow
 note: the steps must be followed in a specific order, otherwise starting the VPN may drop your SSH session.  
 1. Set up NGINX & Firewall
+
 2. Setup VPN and Firewall
 3. Setup torrenting software and SSL certificate
 4. mount cloud storage
 
-## Set up NGINX & UFW
+## Set up NGINX & Firewall
 Most cloud compute providers offer a firewall service. Using it will take the load of the firewall off your server. Otherwise I reccomend using UFW.
 Firstly, go ahead and enable inbound connections on ports 22,80,443,8080 and 8096. We will remove 80 later for security reasons but we need it to get set up. Also, to reduce bot-spam on your server, use an ip whitelist for inbound ssh connections.
 
@@ -47,7 +51,7 @@ Next:
 sudo apt install nginx
 ```
 navigate to `http://your_server_ip/` and you should see the Nginx welcome page.  
-make a directory where you want to serve files from. I did `/home/ubuntu/media`.  
+make a directory where you want to serve files from. I did `/home/ubuntu/media`.
 then create a file `/etc/nginx/conf.d` with contents:
 ```
 http {
