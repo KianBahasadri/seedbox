@@ -37,8 +37,14 @@ I'm personally paying about $2 a month because I'm only paying for the vpn; I'm 
   - Make sure you encrypt it if someone else is providing it to you, ill go over this later
 
 
+## Limitations and Notices
+1. the wireguard container does not support ipv6, it was throwing errors and it seemed too difficult to solve so i just removed ipv6 from the config
+2. This error when starting the wireguard container is harmless `s6-rc: fatal: unable to take locks: Resource busy`
+
+
 ## Docker
 TODO
+
 
 
 ## Documentation
