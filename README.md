@@ -41,3 +41,5 @@ I'm personally paying about $2 a month because I'm only paying for the vpn; I'm 
 TODO
 
 
+## Documentation
+(Routing Docker Host And Container Traffic Through WireGuard)[https://www.linuxserver.io/blog/routing-docker-host-and-container-traffic-through-wireguard]
