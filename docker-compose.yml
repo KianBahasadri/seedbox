@@ -1,26 +1,5 @@
 version: "3.8"
 services:
-  qbittorrent:
-    image: lscr.io/linuxserver/qbittorrent:latest
-    container_name: qbittorrent
-    network_mode: service:wireguard
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=America/New_York
-      - WEBUI_PORT=8080
-      - TORRENTING_PORT=6881
-    volumes:
-      - /path/to/appdata/config:/config
-      - /path/to/downloads:/downloads
-    #ports:
-      #- 8080:8080
-      #- 6881:6881
-      #- 6881:6881/udp
-    depends_on:
-      - wireguard
-    restart: unless-stopped
-
   wireguard:
     image: lscr.io/linuxserver/wireguard:latest
     container_name: wireguard
@@ -32,13 +11,72 @@ services:
       - PGID=1000
       - TZ=America/New_York
     volumes:
-      - ./config:/config
+      - ./config_wireguard:/config
       - /lib/modules:/lib/modules #optional -- for iptables
     ports:
       - 51820:51820/udp
       - 8080:8080 #for qbittorent
+      - 3000:3000
+      - 3001:3001
     sysctls:
       - net.ipv4.conf.all.src_valid_mark=1
     restart: unless-stopped
 
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    network_mode: service:wireguard
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/New_York
+      - WEBUI_PORT=8080
+      - TORRENTING_PORT=6881
+    volumes:
+      - ./config_qbittorent:/config
+      - /media_local:/downloads
+    #ports:
+      #- 8080:8080
+      #- 6881:6881
+      #- 6881:6881/udp
+    depends_on:
+      - wireguard
+    restart: unless-stopped
 
+  jellyfin:
+    image: lscr.io/linuxserver/jellyfin:latest
+    container_name: jellyfin
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/New_York
+      #- JELLYFIN_PublishedServerUrl=20.190.194.85 #optional
+    volumes:
+      - ./config_jellyfin:/config
+      - /media_read/tvshows:/data/tvshows
+      - /media_read/movies:/data/movies
+    ports:
+      - 8096:8096
+      #- 8920:8920 #optional
+      #- 7359:7359/udp #optional
+      #- 1900:1900/udp #optional
+    restart: unless-stopped
+
+  firefox:
+    image: lscr.io/linuxserver/firefox:latest
+    container_name: firefox
+    network_mode: service:wireguard
+    security_opt:
+      - seccomp:unconfined #optional
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      - FIREFOX_CLI=https://www.linuxserver.io/ #optional
+    volumes:
+      - /path/to/config:/config
+    #ports:
+      #- 3000:3000
+      #- 3001:3001
+    shm_size: "1gb"
+    restart: unless-stopped

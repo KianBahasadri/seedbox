@@ -40,12 +40,20 @@ I'm personally paying about $2 a month because I'm only paying for the vpn; I'm 
 ## Limitations and Notices
 1. the wireguard container does not support ipv6, it was throwing errors and it seemed too difficult to solve so i just removed ipv6 from the config
 2. This error when starting the wireguard container is harmless `s6-rc: fatal: unable to take locks: Resource busy`
+3. on azure, the free tier storage was a 64GiB P6 SSD. So basically you cant download anything more than about 58GiB
+4. Positive: you can test the setup without mounting the remote storage, because it will just be using a local folder instead. You just have to make sure the media read and write folders are symbolic links to media_local or another directory
 
+## Setup
 
-## Docker
-TODO
+You need to mount the remote storage twice, once using read-only and no VFS caching, and the other time using full VFS caching. The first one will be for streaming, and the second one will be for torrenting.
+actually, sorry, on the second time, you shouldnt use full, you should have qbittorent download files locally and then move them to the storage once its done, so probably just use vfs writes mode
 
+1. mount rclone remote bucket on the path you want
+2. make a symbolic link to that path in your seedbox directory named `downloads/`
+3. profit
 
+  
+  YOOOO, I ADDED A FIREFOX CONTAINER, ROUTED THROUGH WIREGUARD, AND DID DNS LEAK TEST AND SHIT, IT ALL WORKED, HOLY SHIT IT ALL WORKED FAM, LETS FUCKING GOOOOOOO
 
 ## Documentation
 (Routing Docker Host And Container Traffic Through WireGuard)[https://www.linuxserver.io/blog/routing-docker-host-and-container-traffic-through-wireguard]
