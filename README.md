@@ -43,7 +43,14 @@ I'm personally paying about $2 a month because I'm only paying for the vpn; I'm 
 3. on azure, the free tier storage was a 64GiB P6 SSD. So basically you cant download anything more than about 58GiB
 4. Positive: you can test the setup without mounting the remote storage, because it will just be using a local folder instead. You just have to make sure the media read and write folders are symbolic links to media_local or another directory
 
+
+
 ## Setup
+after installing docker, run
+```
+sudo usermod -aG docker $USER
+```
+
 
 You need to mount the remote storage twice, once using read-only and no VFS caching, and the other time using full VFS caching. The first one will be for streaming, and the second one will be for torrenting.
 actually, sorry, on the second time, you shouldnt use full, you should have qbittorent download files locally and then move them to the storage once its done, so probably just use vfs writes mode
@@ -57,3 +64,4 @@ actually, sorry, on the second time, you shouldnt use full, you should have qbit
 
 ## Documentation
 (Routing Docker Host And Container Traffic Through WireGuard)[https://www.linuxserver.io/blog/routing-docker-host-and-container-traffic-through-wireguard]
+https://docs.docker.com/engine/install/linux-postinstall/
